@@ -1,21 +1,20 @@
 from rest_framework import serializers
-from .models import Blog
+from .models import (
+    Blog,
+    Tag
+)
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 
 class PostListViewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blog
-        fields = (
-            'author',
-            'title',
-            'slug',
-            'content',
-            'updated_at',
-            'published_at'
-        )
 
+    tags = TagSerializer(many=True, read_only=True)
 
-class PostDetailViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = (
@@ -25,16 +24,65 @@ class PostDetailViewSerializer(serializers.ModelSerializer):
             'content',
             'updated_at',
             'published_at',
-            'draft'
+            'tags'
+        )
+
+
+class PostDetailViewSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = (
+            'author',
+            'title',
+            'slug',
+            'content',
+            'updated_at',
+            'published_at',
+            'draft',
+            'tags'
         )
 
 
 class PostCreateandUpdateViewSerializer(serializers.ModelSerializer):
+
+    tags = TagSerializer(many=True, read_only=False)
+
     class Meta:
         model = Blog
         fields = (
             'title',
             'content',
             'delta',
-            'published_at'
+            'published_at',
+            'tags'
         )
+
+    def create(self, validated_data):
+        tag_data = validated_data.pop('tags')
+
+        blog = Blog.objects.create(**validated_data)
+
+        for tag in tag_data:
+            tag, created = Tag.objects.get_or_create(**tag)
+            blog.tags.add(tag)
+        return blog
+
+    def update(self, instance, validated_data):
+
+        for existing_tag in instance.tags.all():
+            instance.tags.remove(existing_tag)
+
+        instance.title = validated_data.get('title', instance.title)
+        instance.content = validated_data.get('content', instance.content)
+        instance.delta = validated_data.get('delta', instance.delta)
+        instance.draft = validated_data.get('draft', instance.draft)
+
+        tag_data = validated_data.pop('tags')
+        for tag in tag_data:
+            tag, created = Tag.objects.get_or_create(**tag)
+            instance.tags.add(tag)
+
+        instance.save()
+        return instance

@@ -26,7 +26,7 @@ urlpatterns = [
     ),
     path(
         '<str:slug>/edit/',
-        PostDetailView.as_view(),
+        PostUpdateView.as_view(),
         name="post-update-view"
     ),
     path(

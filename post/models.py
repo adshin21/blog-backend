@@ -5,6 +5,10 @@ from django.utils.text import slugify
 from secrets import token_hex
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=30)
+
+
 class Blog(models.Model):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255, unique=True)
@@ -14,6 +18,7 @@ class Blog(models.Model):
     draft = models.BooleanField(default=False)
     published_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag)
 
 
 def unique_slug_generator(instance, new_slug=None, **kwargs):
