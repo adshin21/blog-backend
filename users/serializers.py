@@ -6,24 +6,27 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class CustomTokenPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, data):
-        print(data)
+
         try:
-            user = User.objects.get(email=data.get("username")) or \
-                User.objects.get(username=data.get("username"))
+            user = User.objects.filter(username=data.get("username")) or \
+                User.objects.filter(email=data.get("username"))
         except User.DoesNotExist:
             raise serializers.ValidationError("No such user exists")
 
         credentials = {
+            "username": "",
             "password": data.get("password")
         }
 
         if user:
+            user = user.first()
             credentials["username"] = user.username
 
         return super().validate(credentials)
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     class Meta:

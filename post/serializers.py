@@ -14,6 +14,7 @@ class TagSerializer(serializers.ModelSerializer):
 class PostListViewSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(many=True, read_only=True)
+    author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Blog
@@ -30,6 +31,7 @@ class PostListViewSerializer(serializers.ModelSerializer):
 
 class PostDetailViewSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
+    author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Blog

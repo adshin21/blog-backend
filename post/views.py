@@ -23,6 +23,9 @@ class PostCreateView(generics.CreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = PostCreateandUpdateViewSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class PostUpdateView(generics.UpdateAPIView):
     queryset = Blog.objects.all()
