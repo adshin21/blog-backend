@@ -14,11 +14,14 @@ class Blog(models.Model):
     slug = models.CharField(max_length=255, unique=True)
     content = models.TextField()
     delta = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     draft = models.BooleanField(default=False)
     published_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag)
+
+    class Meta:
+        ordering = ['-published_at']
 
 
 def unique_slug_generator(instance, new_slug=None, **kwargs):
