@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import environ
-
+from datetime import timedelta
 env = environ.Env()
 environ.Env.read_env()
 
@@ -150,3 +150,13 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=3600),
+    'ALGORITHM': 'RS256',
+    'SIGNING_KEY': env.str('SIGNING_KEY', multiline=True),
+    'VERIFYING_KEY': env.str('VERIFYING_KEY', multiline=True),
+    'USER_ID_FIELD': 'username'
+}
+
+print(SIMPLE_JWT['SIGNING_KEY'], '\n', SIMPLE_JWT['VERIFYING_KEY'])

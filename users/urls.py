@@ -16,7 +16,9 @@ urlpatterns = [
     ),
     path(
         'token/',
-        TokenObtainPairView.as_view(serializer_class=CustomTokenPairSerializer),
+        TokenObtainPairView.as_view(
+            serializer_class=CustomTokenPairSerializer,
+        ),
         name='token_obtain_pair'
     ),
     path(
