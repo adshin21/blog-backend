@@ -158,5 +158,3 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': env.str('VERIFYING_KEY', multiline=True),
     'USER_ID_FIELD': 'username'
 }
-
-print(SIMPLE_JWT['SIGNING_KEY'], '\n', SIMPLE_JWT['VERIFYING_KEY'])

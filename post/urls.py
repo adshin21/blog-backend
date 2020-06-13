@@ -4,7 +4,8 @@ from .views import (
     PostDetailView,
     PostCreateView,
     PostUpdateView,
-    PostDestroyView
+    PostDestroyView,
+    PostRecommendationView
 )
 
 
@@ -34,5 +35,9 @@ urlpatterns = [
         PostDestroyView.as_view(),
         name="post-destroy-view"
     ),
-
+    path(
+        'f/recommendation/',
+        PostRecommendationView.as_view(),
+        name="post-recommendation-view"
+    )
 ]

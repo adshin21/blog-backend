@@ -16,8 +16,8 @@ class Blog(models.Model):
     delta = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     draft = models.BooleanField(default=False)
-    published_at = models.DateTimeField()
-    updated_at = models.DateTimeField(auto_now_add=True)
+    published_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag)
 
     class Meta:

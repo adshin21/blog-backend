@@ -57,9 +57,12 @@ class PostCreateandUpdateViewSerializer(serializers.ModelSerializer):
             'title',
             'content',
             'delta',
+            'slug',
             'published_at',
             'tags'
         )
+
+        read_only_fields = ('slug',)
 
     def create(self, validated_data):
         tag_data = validated_data.pop('tags')
