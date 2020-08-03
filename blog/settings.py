@@ -158,3 +158,6 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': env.str('VERIFYING_KEY', multiline=True),
     'USER_ID_FIELD': 'username'
 }
+
+GITHUB_CLIENT_ID = env.str('GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = env.str('GITHUB_CLIENT_SECRET')

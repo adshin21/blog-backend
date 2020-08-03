@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserCreateView
+from .views import UserCreateView, SocialLoginView
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -20,6 +20,11 @@ urlpatterns = [
             serializer_class=CustomTokenPairSerializer,
         ),
         name='token_obtain_pair'
+    ),
+    path(
+        'social/token/',
+        SocialLoginView.as_view(),
+        name='social-login'
     ),
     path(
         'token/refresh/',

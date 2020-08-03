@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .permissions import IsOwnerOrReadOnly
 from django.db.models import Q
+from random import shuffle
 
 from .serializers import (
     PostListViewSerializer,
@@ -52,12 +53,11 @@ class PostRecommendationView(views.APIView):
 
         tag_list, slug = request.data['tags'], request.data['slug']
         tags = [i['name'] for i in tag_list]
-        print('tags', tags, slug)
         tag_based = Blog.objects.filter(tags__name__in=tags).values("title", "slug").distinct()
         tag_based_list = list(tag_based)
         tag_based_list = filter(lambda x: x['slug'] != slug, tag_based_list)
         tag_based_list = list(tag_based_list)
-
+        shuffle(tag_based_list)
         if len(tag_based_list) >= 3:
             return Response(
                 data=tag_based_list,
@@ -76,7 +76,9 @@ class PostRecommendationView(views.APIView):
         title_based_list = filter(lambda x: x['slug'] != slug, title_based_list)
         tag_based_list = list(tag_based_list)
 
+        res = [*tag_based_list, *title_based_list]
+        shuffle(res)
         return Response(
-            data=[*tag_based_list, *title_based_list],
+            data=res,
             status=200
         )
