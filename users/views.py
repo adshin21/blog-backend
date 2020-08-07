@@ -13,6 +13,7 @@ from random import randint
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.conf import settings
+import json
 
 
 class UserCreateView(CreateAPIView):
@@ -119,7 +120,67 @@ class SocialLoginView(APIView):
                     status=400
                 )
         else:
-            return Response(
-                data="Adding more soon",
-                status=400
-            )
+            payload = {'access_token': request.data.get("code")}
+            r = requests.get('https://www.googleapis.com/oauth2/v2/userinfo',
+                             params=payload)
+            data = json.loads(r.text)
+
+            if "error" in data:
+                content = {'message': 'wrong google token / this google token \
+                is already expired.'}
+                return Response(
+                    data=content,
+                    status=400
+                )
+
+            username, email = data['email'].split('@')[0], data['email']
+
+            try:
+                check_user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                while True:
+                    check_username = User.objects.filter(username=username).exists()
+                    if not check_username:
+                        break
+
+                    temp_username = ''
+                    for i in range(randint(5, 8)):
+                        temp_username = ascii_lowercase[randint(0, 25)]
+                    temp_username += str(randint(0, 1000))
+                    username = temp_username
+
+                serializer = SocialUserCreateSerializer(data={
+                    "email": email,
+                    "username": username,
+                    "provider": "google"
+                })
+
+                if serializer.is_valid():
+                    user = serializer.save()
+                    refresh = RefreshToken.for_user(user)
+                    return Response(
+                        data={
+                            'refresh': str(refresh),
+                            'access': str(refresh.access_token)
+                        }
+                    )
+                else:
+                    return Response(
+                        data=serializer.errors,
+                        status=400
+                    )
+
+            if check_user:
+                if provider != "google":
+                    return Response(
+                        data="Account already exists",
+                        status=400
+                    )
+                else:
+                    refresh = RefreshToken.for_user(check_user)
+                    return Response(
+                        data={
+                            'refresh': str(refresh),
+                            'access': str(refresh.access_token)
+                        }
+                    )
