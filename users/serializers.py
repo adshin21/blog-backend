@@ -26,7 +26,6 @@ class CustomTokenPairSerializer(TokenObtainPairSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
