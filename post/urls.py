@@ -5,11 +5,21 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDestroyView,
+    GetTagViews,
     PostRecommendationView
 )
 
 
 urlpatterns = [
+    path(
+        'tags/',
+        GetTagViews.as_view(),
+        name="get-all-tags",
+    ),    path(
+        'tags/',
+        GetTagViews.as_view(),
+        name="get-all-tags",
+    ),
     path(
         '',
         PostListView.as_view(),
@@ -39,5 +49,5 @@ urlpatterns = [
         'f/recommendation/',
         PostRecommendationView.as_view(),
         name="post-recommendation-view"
-    )
+    ),
 ]

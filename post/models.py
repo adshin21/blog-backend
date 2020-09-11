@@ -12,12 +12,10 @@ class Tag(models.Model):
 class Blog(models.Model):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255, unique=True)
-    content = models.TextField()
-    delta = models.TextField()
+    content = models.JSONField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     draft = models.BooleanField(default=False)
     published_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag)
 
     class Meta:
