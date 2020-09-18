@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'social_django',
+    'djoser',
     'users',
     'post',
     'testing',
@@ -156,5 +158,24 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'username'
 }
 
-GITHUB_CLIENT_ID = env.str('GITHUB_CLIENT_ID')
-GITHUB_CLIENT_SECRET = env.str('GITHUB_CLIENT_SECRET')
+GITHUB_CLIENT_ID = env('GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = env('GITHUB_CLIENT_SECRET')
+
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFRIMATION_EMAIL': True,
+    'SERIALIZERS': {},
+}
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True

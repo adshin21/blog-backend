@@ -22,7 +22,6 @@ class PostListViewSerializer(serializers.ModelSerializer):
             'author',
             'title',
             'slug',
-            'content',
             'published_at',
             'tags'
         )

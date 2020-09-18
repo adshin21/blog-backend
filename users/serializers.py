@@ -6,7 +6,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class CustomTokenPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, data):
-
         try:
             user = User.objects.filter(username=data.get("username")) or \
                 User.objects.filter(email=data.get("username"))

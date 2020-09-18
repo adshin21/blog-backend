@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
+from rest_framework.permissions import AllowAny
 from .serializers import CustomTokenPairSerializer
 
 urlpatterns = [
@@ -18,6 +18,7 @@ urlpatterns = [
         'token/',
         TokenObtainPairView.as_view(
             serializer_class=CustomTokenPairSerializer,
+            permission_classes=(AllowAny, )
         ),
         name='token_obtain_pair'
     ),
