@@ -22,8 +22,6 @@ class PostListViewSerializer(serializers.ModelSerializer):
             'author',
             'title',
             'slug',
-            'content',
-            'updated_at',
             'published_at',
             'tags'
         )
@@ -40,7 +38,6 @@ class PostDetailViewSerializer(serializers.ModelSerializer):
             'title',
             'slug',
             'content',
-            'updated_at',
             'published_at',
             'draft',
             'tags'
@@ -56,7 +53,6 @@ class PostCreateandUpdateViewSerializer(serializers.ModelSerializer):
         fields = (
             'title',
             'content',
-            'delta',
             'slug',
             'published_at',
             'tags'
@@ -81,7 +77,6 @@ class PostCreateandUpdateViewSerializer(serializers.ModelSerializer):
 
         instance.title = validated_data.get('title', instance.title)
         instance.content = validated_data.get('content', instance.content)
-        instance.delta = validated_data.get('delta', instance.delta)
         instance.draft = validated_data.get('draft', instance.draft)
 
         tag_data = validated_data.pop('tags')

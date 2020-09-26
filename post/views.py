@@ -1,4 +1,4 @@
-from .models import Blog
+from .models import Blog, Tag
 from rest_framework import generics, views
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -9,7 +9,8 @@ from random import shuffle
 from .serializers import (
     PostListViewSerializer,
     PostDetailViewSerializer,
-    PostCreateandUpdateViewSerializer
+    PostCreateandUpdateViewSerializer,
+    TagSerializer
 )
 
 
@@ -44,6 +45,15 @@ class PostDestroyView(generics.DestroyAPIView):
     queryset = Blog.objects.all()
     serializer_class = PostCreateandUpdateViewSerializer
     lookup_field = 'slug'
+
+
+class GetTagViews(generics.ListAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = (AllowAny, )
+
+    def paginate_queryset(self, queryset, view=None):
+        return None
 
 
 class PostRecommendationView(views.APIView):
