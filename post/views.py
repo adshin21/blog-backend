@@ -1,3 +1,4 @@
+from django.conf import settings
 from .models import Blog, Tag
 from rest_framework import generics, views
 from rest_framework.response import Response
@@ -5,13 +6,20 @@ from rest_framework.permissions import AllowAny
 from .permissions import IsOwnerOrReadOnly
 from django.db.models import Q
 from random import shuffle
-
 from .serializers import (
     PostListViewSerializer,
     PostDetailViewSerializer,
     PostCreateandUpdateViewSerializer,
     TagSerializer
 )
+from secrets import token_hex
+
+
+import boto3
+import requests
+from contextlib import closing
+S3_BUCKET = settings.AWS_STORAGE_BUCKET_NAME
+region = settings.AWS_STORAGE_BUCKET_REGION
 
 
 class PostListView(generics.ListAPIView):
@@ -92,3 +100,46 @@ class PostRecommendationView(views.APIView):
             data=res,
             status=200
         )
+
+
+class UploadImage(views.APIView):
+
+    permission_classes = (AllowAny, )
+
+    def post(self, request):
+
+        file = ""
+        fileName = ""
+
+        try:
+            file = request.FILES['image']
+            fileName = token_hex(10) + '__' + file.name
+        except:
+            url = request.data.get("url", None)
+            fileName = token_hex(10) + '__' + url.split('/')[-1]
+            with closing(requests.get(url, stream=True, verify=False)) as res:
+                file = res.content
+
+        s3 = boto3.resource(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_STORAGE_BUCKET_REGION
+        )
+        s3.Bucket(S3_BUCKET).put_object(
+            Body=file,
+            Key=fileName,
+            ACL='public-read'
+        )
+        url = "https:{0}.s3.{1}.amazonaws.com/{2}".format(
+            S3_BUCKET,
+            region,
+            fileName
+        )
+
+        return Response({
+            "file": {
+                'url': url,
+            },
+            "success": 1
+        })

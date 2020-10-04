@@ -6,16 +6,13 @@ from .views import (
     PostUpdateView,
     PostDestroyView,
     GetTagViews,
-    PostRecommendationView
+    PostRecommendationView,
+    UploadImage,
 )
 
 
 urlpatterns = [
     path(
-        'tags/',
-        GetTagViews.as_view(),
-        name="get-all-tags",
-    ),    path(
         'tags/',
         GetTagViews.as_view(),
         name="get-all-tags",
@@ -49,5 +46,10 @@ urlpatterns = [
         'f/recommendation/',
         PostRecommendationView.as_view(),
         name="post-recommendation-view"
+    ),
+    path(
+        'image/upload/',
+        UploadImage.as_view(),
+        name="image-uplaod-by-file"
     ),
 ]
