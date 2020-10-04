@@ -17,7 +17,6 @@ from secrets import token_hex
 
 import boto3
 import requests
-from io import StringIO
 from contextlib import closing
 S3_BUCKET = settings.AWS_STORAGE_BUCKET_NAME
 region = settings.AWS_STORAGE_BUCKET_REGION
@@ -121,7 +120,12 @@ class UploadImage(views.APIView):
             with closing(requests.get(url, stream=True, verify=False)) as res:
                 file = res.content
 
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_STORAGE_BUCKET_REGION
+        )
         s3.Bucket(S3_BUCKET).put_object(
             Body=file,
             Key=fileName,
