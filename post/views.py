@@ -104,8 +104,6 @@ class PostRecommendationView(views.APIView):
 
 class UploadImage(views.APIView):
 
-    permission_classes = (AllowAny, )
-
     def post(self, request):
 
         file = ""
