@@ -9,6 +9,6 @@ class Testing(APIView):
 
     def get(self, request):
         return Response(
-            data="API is working fine",
+            data="API is working fine (MB)",
             status=200
         )
