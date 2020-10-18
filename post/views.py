@@ -67,6 +67,7 @@ class GetTagViews(generics.ListAPIView):
 class PostRecommendationView(views.APIView):
 
     permission_classes = (AllowAny, )
+
     def post(self, request):
 
         tag_list, slug = request.data['tags'], request.data['slug']
@@ -129,7 +130,7 @@ class UploadImage(views.APIView):
             Key=fileName,
             ACL='public-read'
         )
-        url = "https:{0}.s3.{1}.amazonaws.com/{2}".format(
+        url = "https://{0}.s3.{1}.amazonaws.com/{2}".format(
             S3_BUCKET,
             region,
             fileName
